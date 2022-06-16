@@ -25,6 +25,8 @@ if main.save is not None:
     player[2], player[3], player[5], player[6] = float(player[2]), float(player[3]), int(player[5]), int(player[6])
     inv = gen.convert(file.readline(), True)
     map_d = file.readline().split(";")[0][1:-1].replace("'", "").split(", ")
+    max_hp = int(file.readline().split(";")[0])
+    xp_max = int(file.readline().split(";")[0])
     hp, wp = player[2], player[4]
 c = ""
 
@@ -111,13 +113,13 @@ while player[2] >= 0 or chs != "3":
                 print("\n")
             else:
                 c = ""
-                chs = "4"
+                chs = "5"
 
         elif m[1] == "trap":
             player[2] += m[2]
             print("@Вы наткнулись на ловушку! Это - %s" % m[0])
             if player[2] <= 0:
-                chs = "4"
+                chs = "5"
             else:
                 print(main.damage % (player[0], m[2], player[2], max_hp))
                 chs = input(ds)
@@ -132,8 +134,23 @@ while player[2] >= 0 or chs != "3":
                 print("Недостаточно места в инвентаре! Предмет был выброшен!")
                 chs = input(ds)
     elif chs == "3":
-        s_name = gen.save(player, map_d, inv, s_name, player[5], player[6])
+        s_name = gen.save(player, map_d, inv, s_name, player[5], player[6], max_hp, xp_max)
         chs = input(ds)
+    elif chs == "4":
+        print(main.save_screen)
+        chs = input("- ")
+        Ok = True
+        while Ok:
+            if chs == "2":
+                chs = "5"
+                break
+            if chs == "1":
+                s_name = gen.save(player, map_d, inv, s_name, player[5], player[6], max_hp, xp_max)
+                chs = "5"
+                break
+            else:
+                print("Введите верный номер")
+                Ok = False
     else:
         print(main.stats % (k_r, player[5], player[6]))
         print("Goodbye! See you next time!")

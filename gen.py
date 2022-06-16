@@ -135,21 +135,25 @@ def map_f(m):
                     print(" " * n + " |")
 
 
-def save(p, m, i, n, x, lvl):
+def save(p, m, i, n, x, lvl, mx_hp, mx_xp):
     global ds
-    if n == None:
+    if n is None:
         s_name = input("Имя сохранения - ")
         f_s = open(path + "/%s" % s_name, "w", encoding="UTF-8")
-        for j in (p, i, m, x, lvl):
-            # f_s.write(str(j) + "\n")
+        for j in (p, i, m, x, lvl, mx_hp, mx_xp):
             if j is iter:
                 for l in j:
                     f_s.write(str(l) + ";")
             else:
-                f_s.write(str(j)+";")
+                f_s.write(str(j) + ";")
             f_s.write("\n")
-        print("Сохранение успешно выполнено!")
         f_s.close()
+
+        scores_file = open(path+"/scores.txt", "a+", encoding="UTF-8")
+        scores_file.write("\n" + p[0] + " " + str(p[6]) + " " + str(len(m)) + " " + str(mx_xp))
+        scores_file.close()
+
+        print("Сохранение успешно выполнено!")
         ds = dialog_screen_sp
     else:
         s_name = n
@@ -166,7 +170,7 @@ def save(p, m, i, n, x, lvl):
     return s_name
 
 
-def convert(n, b:bool):
+def convert(n, b: bool):
     n = n[:-2].split(";")
     if b:
         flag = True
@@ -224,6 +228,7 @@ def convert(n, b:bool):
         return m
     return n
 
+
 def convert_tuple(n):
     t = tuple(n[1:-1].replace("'", "").split(", "))
     return t
@@ -241,7 +246,7 @@ def lvl(n):
         return 10
     # k = 1.25 + (n // 10)*0.05
     k = 1.25
-    return math.ceil(lvl(n-1)*k)
+    return math.ceil(lvl(n - 1) * k)
 
 
 def upgrade_hp(l):
@@ -249,9 +254,7 @@ def upgrade_hp(l):
         return "------------<Error>------------"
     if l == 2:
         return 2
-    return upgrade_hp(l-1)+2
-
-
+    return upgrade_hp(l - 1) + 2
 
 
 ds = dialog_screen

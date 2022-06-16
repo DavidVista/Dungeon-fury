@@ -4,8 +4,11 @@ import os
 
 def load_list(p, n):
     print("_Saves_________________")
-    for i in range(1, n+1):
-        print("[%s]. %s" % (i, os.listdir(p)[i-1]))
+    i = 1
+    while i != n:
+        if os.listdir(p)[i-1] != "scores.txt":
+            print("[%s]. %s" % (i, os.listdir(p)[i-1]))
+            i += 1
     print("_______________________")
 
 
@@ -70,6 +73,10 @@ path = os.getcwd()
 
 if not os.path.exists(path + "/saves"):
     os.mkdir(path + "/saves")
+if not os.path.exists(path + "/saves/scores.txt"):
+    scores_file = open(path + "/saves/scores.txt", "w", encoding="UTF-8")
+    scores_file.write("Name | Level | Q. of chambers | Total xp")
+    scores_file.close()
 path += "/saves"
 save = None
 
