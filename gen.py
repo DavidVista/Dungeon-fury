@@ -36,7 +36,7 @@ def event():
         return trap()
 
 
-def fight(enemy, stats):
+def fight(enemy, stats, mx):
     e = list(enemy)
     print(fight_screen % (e[0], e[2], e[3], stats[0], stats[2], stats[4][0], stats[3]))
     attacker = [e, stats][random.randint(0, 1)]
@@ -48,11 +48,11 @@ def fight(enemy, stats):
     while attacker[2] > 0 and defender[2] > 0:
         defender[2] += attacker[3]
         print("%s бьёт %s!" % (attacker[0], defender[0]))
-        print(damage % (defender[0], attacker[3], defender[2]))
+        print(damage % (defender[0], attacker[3], defender[2], mx))
         chs = input("_Нажмите Enter, чтобы продолжить_")
         attacker[2] += defender[3]
         print("%s бьёт %s!" % (defender[0], attacker[0]))
-        print(damage % (attacker[0], defender[3], attacker[2]))
+        print(damage % (attacker[0], defender[3], attacker[2], mx))
         chs = input("_Нажмите Enter, чтобы продолжить_")
     if attacker[0] != e[0] and attacker[2] <= 0.0:
         return "L", defender
@@ -236,12 +236,21 @@ def convert_list(n):
 
 def lvl(n):
     if n < 1:
-        return "Error"
+        return "------------<Error>------------"
     if n == 1:
         return 10
     # k = 1.25 + (n // 10)*0.05
     k = 1.25
     return math.ceil(lvl(n-1)*k)
+
+
+def upgrade_hp(l):
+    if l < 1:
+        return "------------<Error>------------"
+    if l == 2:
+        return 2
+    return upgrade_hp(l-1)+2
+
 
 
 

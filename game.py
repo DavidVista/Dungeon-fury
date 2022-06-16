@@ -1,7 +1,9 @@
-import main, gen
+import gen
+import main
 
 f_save = main.save
 hp = 3
+max_hp = 3
 inv = [["<>", "None"], ["<>", "None"], ["<>", "None"], ["<>", "None"], ["<>", "None"]]
 wp = ("кулаки", "weapon", -0.25)
 k_r = 0
@@ -10,7 +12,7 @@ map_l = []
 xp = 0
 xp_max = xp
 lvl = 0
-n_lvl = gen.lvl(lvl+1)
+n_lvl = gen.lvl(lvl + 1)
 ds = main.dialog_screen
 s_name = None
 
@@ -50,10 +52,13 @@ while player[2] >= 0 or chs != "3":
                         player[3] = item[2]
                         player[4] = item
                     elif item[1] == "food":
-                        player[2] += item[2]
+                        if (max_hp - player[2]) - item[2] <= 0:
+                            player[2] = max_hp
+                        else:
+                            player[2] += item[2]
                         inv[index] = ["<>", "None"]
                         print("*%s был/-о употреблено*\n" % item[0])
-                        print(main.heal % (player[0], item[2], player[2]))
+                        print(main.heal % (player[0], item[2], player[2], max_hp))
                     else:
                         print("Ячейка пуста!")
             if in_chs == "2":
@@ -87,47 +92,38 @@ while player[2] >= 0 or chs != "3":
         m = gen.event()
 
         if m[1] == "enemy":
-            c, player = gen.fight(m, player)
+            c, unit = gen.fight(m, player, max_hp)
             if c == "W":
+                player = unit
                 player[5] += m[4]
                 print(main.conclusion_w % (player[0], m[0], m[4], player[5]))
                 if player[5] > n_lvl:
-                    print(main.new_lvl % (lvl+1, player[5], n_lvl, player[5]-n_lvl))
+                    print(main.new_lvl % (lvl + 1, player[5], n_lvl, player[5] - n_lvl))
                     lvl += 1
+                    max_hp += gen.upgrade_hp(lvl)
+                    player[2] = max_hp
+                    print(main.heal % (player[0], max_hp - player[2], player[2], max_hp))
                     xp_max += player[5]
                     player[5] -= n_lvl
-                    n_lvl = gen.lvl(lvl+1)
+                    n_lvl = gen.lvl(lvl + 1)
                 c = None
                 chs = input(ds)
                 print("\n")
             else:
-                print(main.conclusion_l % (m[0], player[0]))
-                print(main.end_titles % m[0])
-                print(main.stats % (k_r, player[5], player[6]))
-                # for i in map_d:
-                #     map_l = gen.loc_count(i, map_l)
-                # print(map_l)
-                gen.map_f(map_d)
                 c = ""
-                chs = "3"
+                chs = "4"
 
         elif m[1] == "trap":
             player[2] += m[2]
             print("@Вы наткнулись на ловушку! Это - %s" % m[0])
             if player[2] <= 0:
-                print(main.end_titles % m[0])
-                print(main.stats % (k_r, player[5], player[6]))
-                # for i in map_d:
-                #     map_l = gen.loc_count(i, map_l)
-                gen.map_f(map_d)
-                chs = "3"
-                print("\n")
+                chs = "4"
             else:
-                print(main.damage % (player[0], m[2], player[2]))
+                print(main.damage % (player[0], m[2], player[2], max_hp))
                 chs = input(ds)
         else:
             if ["<>", "None"] in inv:
-                inv[inv.index( ["<>", "None"] )] = m
+                inv[inv.index(["<>", "None"])] = m
                 print("@Вы достали %s!" % m[0])
                 print("*%s был/-а добавлен/-а в инвентарь*\n" % m[0])
                 chs = input(ds)
@@ -139,12 +135,7 @@ while player[2] >= 0 or chs != "3":
         s_name = gen.save(player, map_d, inv, s_name, player[5], player[6])
         chs = input(ds)
     else:
-        chs = input(main.save_screen)
-        if chs == "1":
-            s_name = gen.save(player, map_d, inv, s_name, player[5], player[6])
         print(main.stats % (k_r, player[5], player[6]))
         print("Goodbye! See you next time!")
-        # for i in map_d:
-        #     map_l = gen.loc_count(i, map_l)
         gen.map_f(map_d)
         main.sys.exit()
