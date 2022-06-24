@@ -1,5 +1,6 @@
 import sys
 import os
+from operator import itemgetter
 
 
 def load_list(p, n):
@@ -49,7 +50,24 @@ def game(pl_name):
                                 chs_in = input(dialog_screen_s)
                 chs = input(menu_load_save % pl_name)
         if chs == "3":
-            print("Hello!")
+            scores = open(path + "/scores.txt", "r", encoding="UTF-8")
+            data = []
+            for i in scores.readlines():
+                if "|" in i:
+                    print(" ", i)
+                else:
+                    elem = []
+                    i = i.split()
+                    elem.append(i[0])
+                    elem.append(int(i[1]))
+                    elem.append(int(i[2]))
+                    elem.append(int(i[3]))
+                    data.append(elem)
+            k = 1
+            for elem in sorted(data, key=itemgetter(3, 2, 1, 0), reverse=True):
+                print(k, elem[0], " "*(6-len(elem[0])), elem[1], " "*(8-len(str(elem[1]))), elem[2], " "*(17-len(str(elem[2]))), elem[3])
+                k += 1
+            scores.close()
             chs = input(menu_load_save % pl_name)
         if chs == "4":
             return 0
@@ -69,7 +87,6 @@ def rules():
 
 key = 0
 path = os.getcwd()
-
 
 if not os.path.exists(path + "/saves"):
     os.mkdir(path + "/saves")
@@ -253,7 +270,7 @@ __________________________________
 print("""
 _________________________________
 Cave quest - Пещерное приключение
-v.0.3.3
+v.0.3.4
 DavidXp (c)
 _________________________________
 """)
