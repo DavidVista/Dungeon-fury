@@ -65,7 +65,8 @@ def game(pl_name):
                     data.append(elem)
             k = 1
             for elem in sorted(data, key=itemgetter(3, 2, 1, 0), reverse=True):
-                print(k, elem[0], " "*(6-len(elem[0])), elem[1], " "*(8-len(str(elem[1]))), elem[2], " "*(17-len(str(elem[2]))), elem[3])
+                print(k, elem[0], " " * (6 - len(elem[0])), elem[1], " " * (8 - len(str(elem[1]))), elem[2],
+                      " " * (17 - len(str(elem[2]))), elem[3])
                 k += 1
             scores.close()
             chs = input(menu_load_save % pl_name)
@@ -77,12 +78,19 @@ def game(pl_name):
 
 def change_name():
     global pl_name
-    pl_name = input("Теперь вас зовут: ")
-    print("Приветствуем вас, %s" % pl_name)
+    Ok = True
+    while Ok:
+        pl_name = input("Теперь вас зовут (max=5): ")
+        if len(pl_name) <= 5:
+            print("Приветствуем вас, %s" % pl_name)
+            Ok = False
 
 
 def rules():
-    return 0
+    print("""1. Весь игровой процесс происходит через вывод и ввод данных
+2. Вписывать ТОЛЬКО ТЕ ЦИФРЫ, ЧТО УКАЗАНЫ В МЕНЮ!
+3. Не заходить в файлы игры!
+""")
 
 
 key = 0
@@ -274,7 +282,11 @@ v.0.3.4
 DavidXp (c)
 _________________________________
 """)
-pl_name = input("Введите ваше имя: ")
+Ok = True
+while Ok:
+    pl_name = input("Введите ваше имя (max=5): ")
+    if len(pl_name) <= 5:
+        Ok = False
 print(menu % pl_name)
 chs = input("- ")
 

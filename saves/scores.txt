@@ -1,4 +1,0 @@
-Name | Level | Q. of chambers | Total xp
-Ior 0 17 48
-Uy 0 1 6
-Uy 0 0 6
