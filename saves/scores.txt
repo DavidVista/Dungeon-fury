@@ -1,2 +1,4 @@
 Name | Level | Q. of chambers | Total xp
-David 0 2 0
+Ior 0 17 48
+Uy 0 1 6
+Uy 0 0 6

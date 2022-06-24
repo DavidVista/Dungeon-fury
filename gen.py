@@ -148,11 +148,6 @@ def save(p, m, i, n, x, lvl, mx_hp, mx_xp):
                 f_s.write(str(j) + ";")
             f_s.write("\n")
         f_s.close()
-
-        scores_file = open(path+"/scores.txt", "a+", encoding="UTF-8")
-        scores_file.write("\n" + p[0] + " " + str(p[6]) + " " + str(len(m)) + " " + str(mx_xp))
-        scores_file.close()
-
         print("Сохранение успешно выполнено!")
         ds = dialog_screen_sp
     else:
@@ -170,10 +165,17 @@ def save(p, m, i, n, x, lvl, mx_hp, mx_xp):
     return s_name
 
 
+def add_score(name, level, q, xp):
+    scores_file = open(path + "/scores.txt", "a+", encoding="UTF-8")
+    scores_file.write("\n" + name + " " + str(level) + " " + str(q) + " " + str(xp))
+    scores_file.close()
+
+
 def convert(n, b: bool):
-    n = n[:-2].split(";")
+    n = n.split(";")
     if b:
         flag = True
+        stop = False
         m = []
         n = n[0][1:-1]
         while flag:
@@ -193,6 +195,7 @@ def convert(n, b: bool):
                 else:
                     m.append(convert_tuple(n[l:r + 1]))
                     n = n[:l - 1] + n[r + 2:]
+                stop = True
             if n[0] == "[":
                 l = n.find("[")
                 r = n.find("]")
@@ -202,21 +205,25 @@ def convert(n, b: bool):
                 elif l - 1 > 0 and r + 2 > len(n) - 1:
                     m.append(convert_list(n[l:r + 1]))
                     n = n[:l - 2]
-                elif l - 1 < 0 and r + 2 > len(a) - 1:
+                elif l - 1 < 0 and r + 2 > len(n) - 1:
                     m.append(convert_list(n[l:r + 1]))
                     n = ''
                     flag = False
+                    break
                 else:
                     m.append(convert_list(n[l:r + 1]))
                     n = n[:l - 1] + n[r + 2:]
-            if n[0] == "'" and ", " in n:
+                stop = True
+            if n[0] == "'" and ", " in n and not stop:
                 a = n.replace("'", "", 2).split(", ", 1)
                 n = a[1]
                 m.append(a[0])
-            elif ", " in n:
+                stop = True
+            elif ", " in n and not stop:
                 a = n.split(", ", 1)
                 n = a[1]
                 m.append(a[0])
+                stop = True
             if ", " not in n and flag:
                 flag = False
                 if "'" in n:
@@ -224,7 +231,8 @@ def convert(n, b: bool):
                 else:
                     m.append(n)
                 n = ''
-        del a
+                break
+            stop = False
         return m
     return n
 
@@ -240,8 +248,6 @@ def convert_list(n):
 
 
 def lvl(n):
-    if n < 1:
-        return "------------<Error>------------"
     if n == 1:
         return 10
     # k = 1.25 + (n // 10)*0.05
@@ -250,9 +256,7 @@ def lvl(n):
 
 
 def upgrade_hp(l):
-    if l < 1:
-        return "------------<Error>------------"
-    if l == 2:
+    if l == 1:
         return 2
     return upgrade_hp(l - 1) + 2
 

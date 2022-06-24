@@ -102,6 +102,7 @@ while player[2] >= 0 or chs != "3":
                 if player[5] > n_lvl:
                     print(main.new_lvl % (lvl + 1, player[5], n_lvl, player[5] - n_lvl))
                     lvl += 1
+                    player[6] += 1
                     max_hp += gen.upgrade_hp(lvl)
                     player[2] = max_hp
                     print(main.heal % (player[0], max_hp - player[2], player[2], max_hp))
@@ -152,6 +153,9 @@ while player[2] >= 0 or chs != "3":
                 print("Введите верный номер")
                 Ok = False
     else:
+        if xp_max == 0:
+            xp_max = player[5]
+        gen.add_score(player[0], player[6], k_r, xp_max)
         print(main.stats % (k_r, player[5], player[6]))
         print("Goodbye! See you next time!")
         gen.map_f(map_d)

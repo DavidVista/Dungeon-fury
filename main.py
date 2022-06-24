@@ -6,8 +6,8 @@ def load_list(p, n):
     print("_Saves_________________")
     i = 1
     while i != n:
-        if os.listdir(p)[i-1] != "scores.txt":
-            print("[%s]. %s" % (i, os.listdir(p)[i-1]))
+        if os.listdir(p)[i] != "scores.txt":
+            print("[%s]. %s" % (i, os.listdir(p)[i]))
             i += 1
     print("_______________________")
 
@@ -31,7 +31,7 @@ def game(pl_name):
                             print("Такого сохранения не существует!")
                             chs_in = input(dialog_screen_s)
                         else:
-                            save = f[int(chs_num) - 1]
+                            save = f[int(chs_num)]
                             return 1
                     if chs_in == "2":
                         chs_num = input("Удалить сохранение под номером: ")
@@ -39,10 +39,10 @@ def game(pl_name):
                             print("Такого сохранения не существует!")
                             chs_in = input(dialog_screen_s)
                         else:
-                            chs_in = input(del_screen % f[int(chs_num)-1])
+                            chs_in = input(del_screen % f[int(chs_num)])
                             if chs_in == "1":
-                                os.remove(path + "/" + f[int(chs_num)-1])
-                                print("Сохранение %s успешно удалено!" % f[int(chs_num)-1])
+                                os.remove(path + "/" + f[int(chs_num)])
+                                print("Сохранение %s успешно удалено!" % f[int(chs_num)])
                                 chs_in = input(dialog_screen_s)
                             else:
                                 print("Отмена удаления!")
@@ -253,7 +253,7 @@ __________________________________
 print("""
 _________________________________
 Cave quest - Пещерное приключение
-v.0.2.4
+v.0.3.3
 DavidXp (c)
 _________________________________
 """)
